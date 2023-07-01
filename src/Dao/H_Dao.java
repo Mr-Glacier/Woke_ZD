@@ -1,10 +1,9 @@
 package Dao;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
-import java.util.SortedMap;
+import java.sql.*;
+import java.util.ArrayList;
 
 public class H_Dao {
     private Connection conn = null;
@@ -117,5 +116,80 @@ public class H_Dao {
         } catch (Exception ex) {
             System.out.println(ex.toString());
         }
+    }
+
+
+    /*
+    public ArrayList<Object> Method_Find(String PackageName){
+        ArrayList<Object> resultList = new ArrayList<Object>();
+        try{
+            String query = "SELECT*FROM "+ this.tableName;
+            Method_CreatSomeObject();
+            ResultSet resultSet = stmt.executeQuery(query);
+            while (resultSet.next()){
+                Class c = Class.forName(PackageName);
+                Object o = c.newInstance();
+                ResultSetMetaData rsmd = resultSet.getMetaData();
+                for (int i = 0; i < rsmd.getColumnCount(); i++) {
+                    String cName = rsmd.getColumnName(i + 1);
+                    Object cObject =resultSet.getObject(i+1);
+                    Field field = c.getDeclaredField(cName);
+                    field.setAccessible(true);
+                    field.set(o, cObject);
+                }
+                resultList.add(o);
+            }
+            resultSet.close();
+            stmt.close();
+            conn.close();
+        }catch (Exception ex){
+            System.out.println(ex.toString());
+        }
+        return resultList;
+    }
+
+     */
+    //查询方法-查询所有
+    public ArrayList<Object> Method_Find(String packageName){
+        ArrayList<Object> results = new ArrayList<Object>();
+        try{
+            /*
+            find方法较难理解,个人难点在于返回值上,查询语句并不难理解,但在后续编码中较为重要;
+            在find方法中如果传入参数为Object,则使用Class F = obj.getClass()
+            如果传入参数为packageName,则使用Class F = Class.forName("packageName")
+             */
+            String query ="SELECT*FROM "+this.tableName;
+            Method_CreatSomeObject();
+           ResultSet resultSet = stmt.executeQuery(query);
+           while (resultSet.next()){
+
+               Class F = Class.forName(packageName);
+               //Class F = obj.getClass();
+               //实例化
+               Object Find = F.newInstance();
+               //获取列名
+               ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+               //获取列数
+               int lieNumber = resultSetMetaData.getColumnCount();
+               System.out.println(lieNumber);
+
+               for (int i = 0; i < lieNumber; i++) {
+                   //通过序号获取列名
+                   String columnName = resultSetMetaData.getColumnName(i+1);
+                   //获取值
+                   Object columnValue = resultSet.getObject(i+1);
+                   //根据列名获取属性.getDeclaredField,获取类中所有的声明字段
+                   Field field = F.getDeclaredField(columnName);
+                   //可以向私有属性中写值,将private变为public
+                   field.setAccessible(true);
+                   //写值
+                   field.set(Find, columnValue);
+               }
+               results.add(Find);
+           }
+        }catch (Exception ex){
+            System.out.println(ex.toString());
+        }
+        return results;
     }
 }
