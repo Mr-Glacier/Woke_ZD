@@ -1,5 +1,7 @@
 package Dao;
 
+import Entity.Bean_DModel;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.sql.*;
@@ -16,8 +18,10 @@ public class H_Dao {
     private String primaryKey;
     private String tableName;
 
+    private String packageName;
+
     //构造函数
-    public H_Dao(String _driverName, String _url, String _userName, String _userPassword, String _primaryKey, String _tableName) {
+    public H_Dao(String _driverName, String _url, String _userName, String _userPassword, String _primaryKey, String _tableName,String _packageName) {
         // "com.microsoft.sqlserver.jdbc.SQLServerDriver";
         this.driverName = _driverName;
         this.Url = _url;
@@ -25,6 +29,7 @@ public class H_Dao {
         this.uerPassword = _userPassword;
         this.tableName = _tableName;
         this.primaryKey = _primaryKey;
+        this.packageName = _packageName;
     }
 
     public void Method_CreatSomeObject() {
@@ -192,4 +197,33 @@ public class H_Dao {
         }
         return results;
     }
+
+//    public ArrayList<Object> Method_Find(int id,Object obj){
+//        try{
+//            Class F1 = obj.getClass();
+//            String F = F1.toString();
+//            Object Find1 = F1.newInstance();
+//            ArrayList<Object> beanList = Method_Find(packageName);
+//            for (int i = 0; i < beanList.size(); i++) {
+//
+//
+//            }
+//
+//        }catch (Exception ex){
+//            System.out.println(ex.toString());
+//        }
+
+//        try{
+//            Class F1 = obj.getClass();
+//            Object Find = F1.newInstance();
+//            ArrayList<Object> beanList = Method_Find(packageName);
+//
+//            for (int i = 0; i < beanList.size(); i++) {
+//                if (beanList.get(i)..equals(id));
+//                    return beanList.get(i);
+//
+//            }
+//        }catch(Exception ex)
+//        return null;
+//    }
 }
